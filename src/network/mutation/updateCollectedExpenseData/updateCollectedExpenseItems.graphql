@@ -1,0 +1,5 @@
+mutation UpdateCollectedExpenseItems(
+  $input: UpdateCollectedExpenseItemsInput!
+) {
+  updateCollectedExpenseItems(input: $input)
+}

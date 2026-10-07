@@ -28,6 +28,7 @@ type Mutation {
   submitInformationReviewScreen(
     input: InformationReviewScreenInput!
   ): ApplicationPayload!
+  updateCollectedExpenseItems(input: UpdateCollectedExpenseItemsInput): Boolean!
 }
 
 type AuthPayload {
@@ -52,7 +53,7 @@ enum ExpenseSource {
 
 type ExpenseItem {
   name: String!
-  amount: Int!
+  amount: Float!
   source: ExpenseSource!
 }
 
@@ -84,7 +85,7 @@ type SubscriptionExpensePayload implements ScreenPayload {
 type InformationReviewPayload implements ScreenPayload {
   applicationId: String!
   screen: ApplicationScreen!
-  incomeAmount: Int!
+  incomeAmount: Float!
   essentialItems: [ExpenseItem!]!
   financialLoanItems: [ExpenseItem!]!
   subscriptionItems: [ExpenseItem!]!
@@ -105,13 +106,13 @@ union ApplicationPayload =
 
 input ExpenseItemsInput {
   name: String!
-  amount: Int!
+  amount: Float!
   source: ExpenseSource!
 }
 
 input CollectIncomeApplicationInput {
   applicationId: ID!
-  incomeAmount: Int!
+  incomeAmount: Float!
 }
 
 input ExpenseApplicationInput {
@@ -121,7 +122,7 @@ input ExpenseApplicationInput {
 
 input InformationReviewScreenInput {
   applicationId: ID!
-  incomeAmount: Int
+  incomeAmount: Float
   essentialItems: [ExpenseItemsInput!]
   financialLoanItems: [ExpenseItemsInput!]
   subscriptionItems: [ExpenseItemsInput!]
@@ -135,18 +136,28 @@ enum CollectedExpenseSource {
 
 type CollectedExpenseItem {
   name: String!
-  amount: Int!
+  amount: Float!
   source: CollectedExpenseSource!
+}
+
+input CollectedExpenseItemInput {
+  name: String!
+  amount: Float!
 }
 
 type CollectedExpenseData {
   userId: ID!
   applicationId: ID!
-  income: Int!
-  totalExpense: Int!
-  moneyLeft: Int!
+  income: Float!
+  totalExpense: Float!
+  moneyLeft: Float!
   savingsRate: Float!
   essentialItems: [CollectedExpenseItem!]!
   financialItems: [CollectedExpenseItem!]!
   subscriptionItems: [CollectedExpenseItem!]!
+}
+
+input UpdateCollectedExpenseItemsInput {
+  category: CollectedExpenseSource!
+  items: [CollectedExpenseItemInput!]!
 }
