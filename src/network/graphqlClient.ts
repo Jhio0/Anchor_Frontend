@@ -5,7 +5,7 @@ import * as SecureStore from "expo-secure-store";
 export const SESSION_KEY = "session_id";
 
 const httpLink = new HttpLink({
-  uri: process.env.EXPO_PUBLIC_API_URL,
+  uri: "http://192.168.1.163:5000/graphql",
 });
 
 const authLink = new SetContextLink(async (prevContext) => {

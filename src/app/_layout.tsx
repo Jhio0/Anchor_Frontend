@@ -6,6 +6,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { TamaguiProvider, Theme } from "tamagui";
 
+import { DashboardRefreshProvider } from "@/feature/collected-expense-data-dashboard/view/dashboard-refresh";
 import { AppShell } from "@/feature/home/view/app-shell";
 import { client } from "@/network/graphqlClient";
 import tamaguiConfig from "../tamagui.config";
@@ -17,20 +18,22 @@ export default function RootLayout() {
         <TamaguiProvider config={tamaguiConfig} defaultTheme="dark">
           <Theme name="dark">
             <SafeAreaProvider>
-              <SafeAreaView
-                style={{
-                  flex: 1,
-                  backgroundColor: "#000",
-                }}
-              >
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                  <View style={{ flex: 1 }}>
-                    <AppShell>
-                      <Slot />
-                    </AppShell>
-                  </View>
-                </TouchableWithoutFeedback>
-              </SafeAreaView>
+              <DashboardRefreshProvider>
+                <SafeAreaView
+                  style={{
+                    flex: 1,
+                    backgroundColor: "#000",
+                  }}
+                >
+                  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={{ flex: 1 }}>
+                      <AppShell>
+                        <Slot />
+                      </AppShell>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </SafeAreaView>
+              </DashboardRefreshProvider>
             </SafeAreaProvider>
           </Theme>
         </TamaguiProvider>

@@ -1,15 +1,19 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
 
 import { useHandleMutation } from "@/components/shared/useHandleMutation";
-import { ExpenseItem } from "@/feature/expenses-categories/model/expense";
+
 import {
   ExpenseSource,
   UpdateCollectedExpenseItemsDocument,
 } from "@/network/__generated__/graphql";
-import { useState } from "react";
+
+import { useDashboardRefresh } from "@/feature/collected-expense-data-dashboard/view/dashboard-refresh";
+import { ExpenseItem } from "@/feature/expenses-categories/model/expense";
 
 export function useUpdatedExpenseItemViewModel() {
   const router = useRouter();
+  const { triggerRefresh } = useDashboardRefresh();
 
   const params = useLocalSearchParams<{
     category: ExpenseSource;
@@ -76,6 +80,7 @@ export function useUpdatedExpenseItemViewModel() {
       },
     });
 
+    triggerRefresh();
     router.back();
   };
 

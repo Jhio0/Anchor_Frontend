@@ -1,9 +1,6 @@
-// feature/dashboard/viewModels/useDashboardViewModel.ts
-
 import { useRouter } from "expo-router";
 
 import { useHandleQuery } from "@/components/shared/useHandleQuery";
-import { ExpenseItem } from "@/feature/expenses-categories/model/expense";
 import { CollectedExpenseDataDocument } from "@/network/__generated__/graphql";
 
 export function useDashboardViewModel() {
@@ -11,7 +8,7 @@ export function useDashboardViewModel() {
 
   const { data, loading, error, refetch } = useHandleQuery(
     CollectedExpenseDataDocument,
-    {}, // No variables required
+    {},
     "Unable to load your dashboard.",
   );
 
@@ -59,16 +56,6 @@ export function useDashboardViewModel() {
     router.push("/screens/create-application-screen");
   };
 
-  const editCategory = (category: string, items: ExpenseItem[]) => {
-    router.push({
-      pathname: "/screens/updated-expense-items-screen",
-      params: {
-        category,
-        items: JSON.stringify(items),
-      },
-    });
-  };
-
   return {
     income: dashboard?.income ?? 0,
     totalExpense: dashboard?.totalExpense ?? 0,
@@ -80,6 +67,5 @@ export function useDashboardViewModel() {
     editThisMonth,
     startNextMonth,
     refetch,
-    editCategory,
   };
 }
