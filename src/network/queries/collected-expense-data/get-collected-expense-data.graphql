@@ -1,0 +1,25 @@
+query CollectedExpenseData {
+  collectedExpenseData {
+    userId
+    applicationId
+    income
+    totalExpense
+    moneyLeft
+    savingsRate
+    essentialItems {
+      name
+      amount
+      source
+    }
+    financialItems {
+      name
+      amount
+      source
+    }
+    subscriptionItems {
+      name
+      amount
+      source
+    }
+  }
+}

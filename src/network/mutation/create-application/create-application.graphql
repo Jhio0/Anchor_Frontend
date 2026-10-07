@@ -1,0 +1,10 @@
+mutation CreateApplication {
+  createApplication {
+    __typename
+
+    ... on CollectIncomePayload {
+      applicationId
+      screen
+    }
+  }
+}

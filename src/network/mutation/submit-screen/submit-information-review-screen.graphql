@@ -1,0 +1,27 @@
+mutation SubmitInformationReviewScreen($input: InformationReviewScreenInput!) {
+  submitInformationReviewScreen(input: $input) {
+    __typename
+    ... on InformationReviewPayload {
+      screen
+      incomeAmount
+      essentialItems {
+        name
+        amount
+        source
+      }
+      financialLoanItems {
+        name
+        amount
+        source
+      }
+      subscriptionItems {
+        name
+        amount
+        source
+      }
+    }
+    ... on CompletedPayload {
+      screen
+    }
+  }
+}

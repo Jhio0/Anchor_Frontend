@@ -1,0 +1,41 @@
+mutation SubmitExpenseScreen($input: ExpenseApplicationInput!) {
+  submitExpenseScreen(input: $input) {
+    __typename
+
+    ... on EssentialExpensePayload {
+      applicationId
+      screen
+    }
+
+    ... on FinancialLoanExpensePayload {
+      applicationId
+      screen
+    }
+
+    ... on SubscriptionExpensePayload {
+      applicationId
+      screen
+    }
+
+    ... on InformationReviewPayload {
+      applicationId
+      screen
+      incomeAmount
+      essentialItems {
+        name
+        amount
+        source
+      }
+      financialLoanItems {
+        name
+        amount
+        source
+      }
+      subscriptionItems {
+        name
+        amount
+        source
+      }
+    }
+  }
+}

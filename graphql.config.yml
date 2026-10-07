@@ -1,0 +1,14 @@
+schema:
+  - src/network/customerSchema.graphql
+documents:
+  - "src/network/queries/**/*.graphql"
+  - "src/network/mutation/**/*.graphql"
+
+generates:
+  ./src/network/__generated__/graphql.ts:
+    plugins:
+      - typescript-operations
+      - typed-document-node
+    config:
+      useTypeImports: true
+      enumsAsTypes: true

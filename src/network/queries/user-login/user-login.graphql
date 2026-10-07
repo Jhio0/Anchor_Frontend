@@ -1,0 +1,11 @@
+query Login($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
+    sessionId
+    user {
+      id
+      name
+      email
+      dateOfBirth
+    }
+  }
+}

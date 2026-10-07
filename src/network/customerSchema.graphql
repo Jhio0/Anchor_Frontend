@@ -1,0 +1,152 @@
+type User {
+  id: ID!
+  name: String!
+  dateOfBirth: String!
+  email: String!
+}
+
+type Query {
+  me: User
+  login(email: String!, password: String!): AuthPayload!
+  user(id: ID!): User!
+  collectedExpenseData: CollectedExpenseData!
+}
+
+type Mutation {
+  createUser(name: String!, dateOfBirth: String!, email: String!): User!
+  signup(
+    name: String!
+    email: String!
+    password: String!
+    dateOfBirth: String!
+  ): AuthPayload!
+  createApplication: ApplicationPayload!
+  submitCollectIncomeScreen(
+    input: CollectIncomeApplicationInput!
+  ): ApplicationPayload!
+  submitExpenseScreen(input: ExpenseApplicationInput!): ApplicationPayload!
+  submitInformationReviewScreen(
+    input: InformationReviewScreenInput!
+  ): ApplicationPayload!
+}
+
+type AuthPayload {
+  sessionId: String!
+  user: User!
+}
+
+enum ApplicationScreen {
+  IncomeDetailScreen
+  EssentialExpenseScreen
+  FinancialLoanExpenseScreen
+  SubscriptionExpenseScreen
+  InformationReviewScreen
+  CompletedScreen
+}
+
+enum ExpenseSource {
+  ESSENTIALS
+  FINANCIAL_LOAN
+  SUBSCRIPTION
+}
+
+type ExpenseItem {
+  name: String!
+  amount: Int!
+  source: ExpenseSource!
+}
+
+interface ScreenPayload {
+  applicationId: String!
+  screen: ApplicationScreen!
+}
+
+type CollectIncomePayload implements ScreenPayload {
+  applicationId: String!
+  screen: ApplicationScreen!
+}
+
+type EssentialExpensePayload implements ScreenPayload {
+  applicationId: String!
+  screen: ApplicationScreen!
+}
+
+type FinancialLoanExpensePayload implements ScreenPayload {
+  applicationId: String!
+  screen: ApplicationScreen!
+}
+
+type SubscriptionExpensePayload implements ScreenPayload {
+  applicationId: String!
+  screen: ApplicationScreen!
+}
+
+type InformationReviewPayload implements ScreenPayload {
+  applicationId: String!
+  screen: ApplicationScreen!
+  incomeAmount: Int!
+  essentialItems: [ExpenseItem!]!
+  financialLoanItems: [ExpenseItem!]!
+  subscriptionItems: [ExpenseItem!]!
+}
+
+type CompletedPayload implements ScreenPayload {
+  applicationId: String!
+  screen: ApplicationScreen!
+}
+
+union ApplicationPayload =
+  | CollectIncomePayload
+  | EssentialExpensePayload
+  | FinancialLoanExpensePayload
+  | SubscriptionExpensePayload
+  | InformationReviewPayload
+  | CompletedPayload
+
+input ExpenseItemsInput {
+  name: String!
+  amount: Int!
+  source: ExpenseSource!
+}
+
+input CollectIncomeApplicationInput {
+  applicationId: ID!
+  incomeAmount: Int!
+}
+
+input ExpenseApplicationInput {
+  applicationId: ID!
+  items: [ExpenseItemsInput!]!
+}
+
+input InformationReviewScreenInput {
+  applicationId: ID!
+  incomeAmount: Int
+  essentialItems: [ExpenseItemsInput!]
+  financialLoanItems: [ExpenseItemsInput!]
+  subscriptionItems: [ExpenseItemsInput!]
+}
+
+enum CollectedExpenseSource {
+  ESSENTIALS
+  FINANCIAL_LOAN
+  SUBSCRIPTION
+}
+
+type CollectedExpenseItem {
+  name: String!
+  amount: Int!
+  source: CollectedExpenseSource!
+}
+
+type CollectedExpenseData {
+  userId: ID!
+  applicationId: ID!
+  income: Int!
+  totalExpense: Int!
+  moneyLeft: Int!
+  savingsRate: Float!
+  essentialItems: [CollectedExpenseItem!]!
+  financialItems: [CollectedExpenseItem!]!
+  subscriptionItems: [CollectedExpenseItem!]!
+}
