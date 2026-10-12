@@ -25,6 +25,10 @@ export default function EssentialExpensesRoute() {
   });
 
   const handleSubmit = async () => {
+    if (vm.warnIfZeroAmount()) {
+      return;
+    }
+
     if (editing === "true") {
       router.replace({
         pathname: "/screens/information-review-screen",
@@ -69,7 +73,7 @@ export default function EssentialExpensesRoute() {
       onAddCustomCategory={vm.onAddCustomCategory}
       onRemoveCategory={vm.onRemoveCategory}
       onSubmit={handleSubmit}
-      canSubmit={vm.hasAtLeastOneAmount}
+      canSubmit={vm.categories.some((c) => c.enabled)}
     />
   );
 }

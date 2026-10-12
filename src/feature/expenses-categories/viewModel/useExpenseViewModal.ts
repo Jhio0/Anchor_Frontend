@@ -1,3 +1,4 @@
+import { showErrorToast } from "@/components/shared/toast";
 import { ExpenseSource } from "@/network/__generated__/graphql";
 import { useState } from "react";
 import { ExpenseCategory, ExpenseItem } from "../model/expense";
@@ -8,6 +9,9 @@ interface UseExpensesViewModelParams<TResult> {
   initialItems?: ExpenseItem[];
   onSubmit: (items: ExpenseItem[]) => Promise<TResult>;
 }
+
+const isInvalidAmount = (c: ExpenseCategory) =>
+  c.enabled && (c.amount === null || Number(c.amount) <= 0);
 
 export function useExpensesViewModel<TResult>({
   defaultCategories,
@@ -72,6 +76,23 @@ export function useExpensesViewModel<TResult>({
     (c) => c.enabled && c.amount !== null && Number(c.amount) > 0,
   );
 
+  // Returns true (and shows a toast) if any enabled category has a blank/zero amount
+  const warnIfZeroAmount = (): boolean => {
+    const invalid = categories.filter(isInvalidAmount);
+
+    if (invalid.length === 0) return false;
+
+    showErrorToast(
+      invalid.length === 1
+        ? `Please enter an amount greater than 0 for ${invalid[0].name}.`
+        : `Please enter an amount greater than 0 for: ${invalid
+            .map((c) => c.name)
+            .join(", ")}.`,
+    );
+
+    return true;
+  };
+
   const getItems = (): ExpenseItem[] => {
     return categories
       .filter((c) => c.enabled && c.amount !== null && Number(c.amount) > 0)
@@ -94,6 +115,7 @@ export function useExpensesViewModel<TResult>({
     onAddCustomCategory,
     onRemoveCategory,
     hasAtLeastOneAmount,
+    warnIfZeroAmount,
     getItems,
     submit,
   };

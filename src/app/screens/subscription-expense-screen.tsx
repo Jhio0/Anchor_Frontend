@@ -22,6 +22,10 @@ export default function SubscriptionExpensesRoute() {
   const vm = useSubscriptionExpensesViewModel(applicationId, { initialItems });
 
   const handleSubmit = async () => {
+    if (vm.warnIfZeroAmount()) {
+      return;
+    }
+
     if (editing === "true") {
       router.replace({
         pathname: "/screens/information-review-screen",

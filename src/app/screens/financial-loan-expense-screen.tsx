@@ -23,6 +23,10 @@ export default function FinancialLoanExpensesRoute() {
   const vm = useFinancialLoanExpensesViewModel(applicationId, { initialItems });
 
   const handleSubmit = async () => {
+    if (vm.warnIfZeroAmount()) {
+      return;
+    }
+
     if (editing === "true") {
       router.replace({
         pathname: "/screens/information-review-screen",
