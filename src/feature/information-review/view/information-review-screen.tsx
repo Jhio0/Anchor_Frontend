@@ -1,7 +1,83 @@
-// feature/information-review/views/information-review-screen.tsx
 import { ScrollView } from "react-native";
 import { Button, Text, XStack, YStack } from "tamagui";
 import { useInformationReviewViewModel } from "../viewModel/informationReviewViewModel";
+
+interface Item {
+  name: string;
+  amount: number;
+}
+
+const sumItems = (items: Item[]) =>
+  items.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+interface SectionCardProps {
+  title: string;
+  emptyText: string;
+  items: Item[];
+  subtotal: number;
+  onEdit: () => void;
+}
+
+function SectionCard({
+  title,
+  emptyText,
+  items,
+  subtotal,
+  onEdit,
+}: SectionCardProps) {
+  return (
+    <YStack
+      background="$backgroundStrong"
+      borderWidth={1}
+      borderColor="$borderColor"
+      style={{ borderRadius: 12 }}
+      p="$4"
+    >
+      <XStack justify="space-between" items="center" mb="$2">
+        <Text fontSize="$2" color="$gray10">
+          {title}
+        </Text>
+        <Text fontSize="$2" color="$blue10" fontWeight="600" onPress={onEdit}>
+          Edit
+        </Text>
+      </XStack>
+
+      {items.length === 0 ? (
+        <Text fontSize="$3" color="$gray9">
+          {emptyText}
+        </Text>
+      ) : (
+        <>
+          {items.map((item, index) => (
+            <XStack
+              key={`${item.name}_${index}`}
+              justify="space-between"
+              mb="$1"
+            >
+              <Text fontSize="$3">{item.name}</Text>
+              <Text fontSize="$3">${item.amount.toLocaleString()}</Text>
+            </XStack>
+          ))}
+
+          {/* Section subtotal */}
+          <XStack
+            justify="space-between"
+            mt="$2"
+            pt="$2"
+            style={{ borderTopWidth: 1, borderTopColor: "#2A2A28" }}
+          >
+            <Text fontSize="$3" fontWeight="700">
+              Total {title.toLowerCase()}
+            </Text>
+            <Text fontSize="$3" fontWeight="700">
+              ${subtotal.toLocaleString()}
+            </Text>
+          </XStack>
+        </>
+      )}
+    </YStack>
+  );
+}
 
 export function InformationReviewScreen() {
   const {
@@ -9,8 +85,6 @@ export function InformationReviewScreen() {
     essentialItems,
     financialLoanItems,
     subscriptionItems,
-    totalExpenses,
-    moneyLeft,
     editIncome,
     editEssentialExpenses,
     editFinancialLoanExpenses,
@@ -19,14 +93,16 @@ export function InformationReviewScreen() {
     isSubmitting,
   } = useInformationReviewViewModel();
 
+  // Recalculated here from the items themselves
+  const essentialTotal = sumItems(essentialItems);
+  const loanTotal = sumItems(financialLoanItems);
+  const subscriptionTotal = sumItems(subscriptionItems);
+
+  const totalExpenses = essentialTotal + loanTotal + subscriptionTotal;
+  const moneyLeft = Number(incomeAmount ?? 0) - totalExpenses;
+
   return (
-    <YStack
-      flex={1}
-      background="$background"
-      pt="$8"
-      pb="$5"
-      justify="space-between"
-    >
+    <YStack flex={1} minH={0} background="$background" pt="$8" pb="$5">
       <YStack gap="$4" px="$5">
         <Text
           fontSize="$3"
@@ -43,9 +119,15 @@ export function InformationReviewScreen() {
       </YStack>
 
       <ScrollView
-        style={{ flex: 1, marginTop: 16 }}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 16 }}
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingTop: 16,
+          paddingBottom: 16,
+        }}
         showsVerticalScrollIndicator={false}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
       >
         <YStack gap="$3">
           {/* Income */}
@@ -74,111 +156,31 @@ export function InformationReviewScreen() {
             </Text>
           </YStack>
 
-          {/* Essential expenses */}
-          <YStack
-            background="$backgroundStrong"
-            borderWidth={1}
-            borderColor="$borderColor"
-            style={{ borderRadius: 12 }}
-            p="$4"
-          >
-            <XStack justify="space-between" items="center" mb="$2">
-              <Text fontSize="$2" color="$gray10">
-                Expenses
-              </Text>
-              <Text
-                fontSize="$2"
-                color="$blue10"
-                fontWeight="600"
-                onPress={editEssentialExpenses}
-              >
-                Edit
-              </Text>
-            </XStack>
-            {essentialItems.length === 0 ? (
-              <Text fontSize="$3" color="$gray9">
-                No expenses added
-              </Text>
-            ) : (
-              essentialItems.map((item) => (
-                <XStack key={item.name} justify="space-between" mb="$1">
-                  <Text fontSize="$3">{item.name}</Text>
-                  <Text fontSize="$3">${item.amount.toLocaleString()}</Text>
-                </XStack>
-              ))
-            )}
-          </YStack>
+          <SectionCard
+            title="Expenses"
+            emptyText="No expenses added"
+            items={essentialItems}
+            subtotal={essentialTotal}
+            onEdit={editEssentialExpenses}
+          />
 
-          {/* Financial loans — NEW SECTION */}
-          <YStack
-            background="$backgroundStrong"
-            borderWidth={1}
-            borderColor="$borderColor"
-            style={{ borderRadius: 12 }}
-            p="$4"
-          >
-            <XStack justify="space-between" items="center" mb="$2">
-              <Text fontSize="$2" color="$gray10">
-                Loans
-              </Text>
-              <Text
-                fontSize="$2"
-                color="$blue10"
-                fontWeight="600"
-                onPress={editFinancialLoanExpenses}
-              >
-                Edit
-              </Text>
-            </XStack>
-            {financialLoanItems.length === 0 ? (
-              <Text fontSize="$3" color="$gray9">
-                No loans added
-              </Text>
-            ) : (
-              financialLoanItems.map((item) => (
-                <XStack key={item.name} justify="space-between" mb="$1">
-                  <Text fontSize="$3">{item.name}</Text>
-                  <Text fontSize="$3">${item.amount.toLocaleString()}</Text>
-                </XStack>
-              ))
-            )}
-          </YStack>
+          <SectionCard
+            title="Loans"
+            emptyText="No loans added"
+            items={financialLoanItems}
+            subtotal={loanTotal}
+            onEdit={editFinancialLoanExpenses}
+          />
 
-          {/* Subscriptions */}
-          <YStack
-            background="$backgroundStrong"
-            borderWidth={1}
-            borderColor="$borderColor"
-            style={{ borderRadius: 12 }}
-            p="$4"
-          >
-            <XStack justify="space-between" items="center" mb="$2">
-              <Text fontSize="$2" color="$gray10">
-                Subscriptions
-              </Text>
-              <Text
-                fontSize="$2"
-                color="$blue10"
-                fontWeight="600"
-                onPress={editSubscriptions}
-              >
-                Edit
-              </Text>
-            </XStack>
-            {subscriptionItems.length === 0 ? (
-              <Text fontSize="$3" color="$gray9">
-                No subscriptions added
-              </Text>
-            ) : (
-              subscriptionItems.map((item) => (
-                <XStack key={item.name} justify="space-between" mb="$1">
-                  <Text fontSize="$3">{item.name}</Text>
-                  <Text fontSize="$3">${item.amount.toLocaleString()}</Text>
-                </XStack>
-              ))
-            )}
-          </YStack>
+          <SectionCard
+            title="Subscriptions"
+            emptyText="No subscriptions added"
+            items={subscriptionItems}
+            subtotal={subscriptionTotal}
+            onEdit={editSubscriptions}
+          />
 
+          {/* Overall totals */}
           <YStack
             mt="$2"
             style={{ borderTopWidth: 1, borderTopColor: "#2A2A28" }}

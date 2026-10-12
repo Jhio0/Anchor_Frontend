@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/client/react";
 import { Slot } from "expo-router";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -25,13 +25,11 @@ export default function RootLayout() {
                     backgroundColor: "#000",
                   }}
                 >
-                  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View style={{ flex: 1 }}>
-                      <AppShell>
-                        <Slot />
-                      </AppShell>
-                    </View>
-                  </TouchableWithoutFeedback>
+                  <View style={{ flex: 1 }}>
+                    <AppShell>
+                      <Slot />
+                    </AppShell>
+                  </View>
                 </SafeAreaView>
               </DashboardRefreshProvider>
             </SafeAreaProvider>
