@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import { ScrollView } from "react-native";
 import { Button, Text, XStack, YStack } from "tamagui";
-import { useCreateApplicationViewModel } from "../viewModel/createApplicationViewModel";
+import { useCreateApplicationViewModel } from "../viewModel/createMonthlyBudgetApplicationViewModel";
 
 const STEPS = [
   {
@@ -62,7 +62,9 @@ function StepRow({
 }
 
 export function CreateApplicationScreen() {
-  const { create, isCreating } = useCreateApplicationViewModel();
+  const { create, isCreating } = useCreateApplicationViewModel(
+    "MONTHLY_COLLECTED_EXPENSE",
+  );
 
   return (
     <YStack flex={1} minH={0} background="$background">

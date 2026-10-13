@@ -1,4 +1,4 @@
-// feature/application/viewModels/useCreateApplicationViewModel.ts
+// feature/create-application/viewModel/createMonthlyBudgetApplicationViewModel.ts
 
 import { useRouter } from "expo-router";
 
@@ -6,7 +6,7 @@ import { useHandleMutation } from "@/components/shared/useHandleMutation";
 import { SCREEN_TO_ROUTE } from "@/feature/helper/screenRouteMapper";
 import { CreateApplicationDocument } from "@/network/__generated__/graphql";
 
-export function useCreateApplicationViewModel() {
+export function useCreateApplicationViewModel(applicationType: string) {
   const router = useRouter();
 
   const [createApplication, { loading }] = useHandleMutation(
@@ -15,7 +15,11 @@ export function useCreateApplicationViewModel() {
   );
 
   const create = async () => {
-    const result = await createApplication();
+    const result = await createApplication({
+      variables: {
+        type: applicationType,
+      },
+    });
 
     const payload = result.data?.createApplication;
 

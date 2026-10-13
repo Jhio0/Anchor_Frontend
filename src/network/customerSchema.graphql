@@ -20,7 +20,7 @@ type Mutation {
     password: String!
     dateOfBirth: String!
   ): AuthPayload!
-  createApplication: ApplicationPayload!
+  createApplication(type: String!): ApplicationPayload!
   submitCollectIncomeScreen(
     input: CollectIncomeApplicationInput!
   ): ApplicationPayload!

@@ -1,5 +1,5 @@
-mutation CreateApplication {
-  createApplication {
+mutation CreateApplication($type: String!) {
+  createApplication(type: $type) {
     __typename
 
     ... on CollectIncomePayload {
