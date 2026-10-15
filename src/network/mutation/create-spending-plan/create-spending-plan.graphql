@@ -1,0 +1,10 @@
+mutation CreateSpendingPlan($input: CreateSpendingPlanInput!) {
+  createSpendingPlan(input: $input) {
+    monthLabel
+    totalBudget
+    allocation {
+      name
+      spent
+    }
+  }
+}

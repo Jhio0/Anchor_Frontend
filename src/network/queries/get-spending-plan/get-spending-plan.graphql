@@ -1,0 +1,10 @@
+query GetSpendingPlan {
+  getSpendingPlan {
+    monthLabel
+    totalBudget
+    allocation {
+      name
+      spent
+    }
+  }
+}

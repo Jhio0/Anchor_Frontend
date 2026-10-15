@@ -10,6 +10,7 @@ type Query {
   login(email: String!, password: String!): AuthPayload!
   user(id: ID!): User!
   collectedExpenseData: CollectedExpenseData!
+  getSpendingPlan: SpendingPlan!
 }
 
 type Mutation {
@@ -29,6 +30,7 @@ type Mutation {
     input: InformationReviewScreenInput!
   ): ApplicationPayload!
   updateCollectedExpenseItems(input: UpdateCollectedExpenseItemsInput): Boolean!
+  createSpendingPlan(input: CreateSpendingPlanInput!): SpendingPlan!
 }
 
 type AuthPayload {
@@ -155,6 +157,22 @@ type CollectedExpenseData {
   essentialItems: [CollectedExpenseItem!]!
   financialItems: [CollectedExpenseItem!]!
   subscriptionItems: [CollectedExpenseItem!]!
+}
+
+type Allocation {
+  name: String!
+  spent: Float!
+}
+
+type SpendingPlan {
+  monthLabel: String!
+  totalBudget: Float!
+  allocation: [Allocation]
+}
+
+input CreateSpendingPlanInput {
+  collectedExpenseId: String!
+  amount: Float!
 }
 
 input UpdateCollectedExpenseItemsInput {
