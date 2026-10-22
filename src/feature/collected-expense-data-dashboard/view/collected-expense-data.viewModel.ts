@@ -57,6 +57,7 @@ export function useDashboardViewModel() {
   };
 
   return {
+    collectedExpenseId: dashboard?.id ?? "",
     income: dashboard?.income ?? 0,
     totalExpense: dashboard?.totalExpense ?? 0,
     moneyLeft: dashboard?.moneyLeft ?? 0,

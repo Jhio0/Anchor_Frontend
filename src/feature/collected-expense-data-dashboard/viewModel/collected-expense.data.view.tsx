@@ -1,13 +1,16 @@
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { Button, Text, XStack, YStack } from "tamagui";
 
 import { useDashboardRefresh } from "@/feature/collected-expense-data-dashboard/view/dashboard-refresh";
-import { router } from "expo-router";
+import { SpendingPlanCard } from "@/feature/spending-plan/view/spending-plan-card";
+
 import { useDashboardViewModel } from "../view/collected-expense-data.viewModel";
 
 export function DashboardScreen() {
   const {
+    collectedExpenseId,
     income,
     totalExpense,
     moneyLeft,
@@ -176,6 +179,14 @@ export function DashboardScreen() {
             </Text>
           </YStack>
         </XStack>
+
+        {/* Spending Plan */}
+        <YStack width="100%" mb="$5">
+          <SpendingPlanCard
+            collectedExpenseId={collectedExpenseId}
+            moneyLeft={moneyLeft}
+          />
+        </YStack>
 
         {/* Breakdown */}
         <Text
